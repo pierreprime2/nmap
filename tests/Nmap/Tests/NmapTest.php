@@ -9,6 +9,19 @@ use Nmap\Port;
 
 class NmapTest extends TestCase
 {
+    private $outputFile      = '';
+    private $timeout = 0;
+    private $executor = null;
+    private $nmap = null;
+
+    public function __construct()
+    {
+        $this->outputFile = __DIR__ . '/Fixtures/test_scan.xml';
+        $this->timeout = 120;
+        $this->executor = $this->getProcessExecutorMock();
+        $this->nmap = new Nmap($this->executor, $this->outputFile);
+    }
+
     public function testScan()
     {
         $outputFile      = __DIR__ . '/Fixtures/test_scan.xml';
@@ -251,6 +264,138 @@ class NmapTest extends TestCase
 
         $nmap = new Nmap($executor, $outputFile);
         $nmap->setTimeout($timeout)->scan(array('williamdurand.fr'));
+    }
+
+    public function testScanWithScanPing()
+    {
+        $this->executor
+            ->expects($this->at(1))
+            ->method('execute')
+            ->with($this->anything(), $this->equalTo($this->timeout))
+            ->will($this->returnValue(0));
+
+        $this->nmap->enableScanPing()->scan(array('williamdurand.fr'));
+    }
+
+    public function testRawScan()
+    {
+        $this->executor
+            ->expects($this->at(1))
+            ->method('execute')
+            ->with($this->anything(), $this->equalTo($this->timeout))
+            ->will($this->returnValue(0));
+
+        $this->nmap->enableRaw()->scan(array('williamdurand.fr'));
+    }
+
+    public function testScanWithHostnameIdentification()
+    {
+        $this->executor
+            ->expects($this->at(1))
+            ->method('execute')
+            ->with($this->anything(), $this->equalTo($this->timeout))
+            ->will($this->returnValue(0));
+
+        $this->nmap->enableHostnameIdentification()->scan(array('williamdurand.fr'));
+    }
+
+    public function testScanWithTcpSyn()
+    {
+        $this->executor
+            ->expects($this->at(1))
+            ->method('execute')
+            ->with($this->anything(), $this->equalTo($this->timeout))
+            ->will($this->returnValue(0));
+
+        $this->nmap->enableScanTcpSyn()->scan(array('williamdurand.fr'));
+    }
+
+    public function testUdpScan()
+    {
+        $this->executor
+            ->expects($this->at(1))
+            ->method('execute')
+            ->with($this->anything(), $this->equalTo($this->timeout))
+            ->will($this->returnValue(0));
+
+        $this->nmap->enableUdpScan()->scan(array('williamdurand.fr'));
+    }
+
+    public function testTcpScan()
+    {
+        $this->executor
+            ->expects($this->at(1))
+            ->method('execute')
+            ->with($this->anything(), $this->equalTo($this->timeout))
+            ->will($this->returnValue(0));
+
+        $this->nmap->enableTcpScan()->scan(array('williamdurand.fr'));
+    }
+
+    public function testParanoidScan()
+    {
+        $this->executor
+            ->expects($this->at(1))
+            ->method('execute')
+            ->with($this->anything(), $this->equalTo($this->timeout))
+            ->will($this->returnValue(0));
+
+        $this->nmap->setAggressivityLevel(0)->scan(array('williamdurand.fr'));
+    }
+
+    public function testSneakyScan()
+    {
+        $this->executor
+            ->expects($this->at(1))
+            ->method('execute')
+            ->with($this->anything(), $this->equalTo($this->timeout))
+            ->will($this->returnValue(0));
+
+        $this->nmap->setAggressivityLevel(1)->scan(array('williamdurand.fr'));
+    }
+
+    public function testPoliteScan()
+    {
+        $this->executor
+            ->expects($this->at(1))
+            ->method('execute')
+            ->with($this->anything(), $this->equalTo($this->timeout))
+            ->will($this->returnValue(0));
+
+        $this->nmap->setAggressivityLevel(2)->scan(array('williamdurand.fr'));
+    }
+
+    public function testAggressiveScan()
+    {
+        $this->executor
+            ->expects($this->at(1))
+            ->method('execute')
+            ->with($this->anything(), $this->equalTo($this->timeout))
+            ->will($this->returnValue(0));
+
+        $this->nmap->setAggressivityLevel(4)->scan(array('williamdurand.fr'));
+    }
+
+    public function testInsaneScan()
+    {
+        $this->executor
+            ->expects($this->at(1))
+            ->method('execute')
+            ->with($this->anything(), $this->equalTo($this->timeout))
+            ->will($this->returnValue(0));
+
+        $this->nmap->setAggressivityLevel(5)->scan(array('williamdurand.fr'));
+    }
+
+    public function testFastScan()
+    {
+        $this->executor
+            ->expects($this->at(1))
+            ->method('execute')
+            ->with($this->anything(), $this->equalTo($this->timeout))
+            ->will($this->returnValue(0));
+
+        $this->nmap->enableFastScan()->scan(array('williamdurand.fr'));
     }
 
     /**

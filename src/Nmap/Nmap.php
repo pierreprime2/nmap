@@ -38,6 +38,23 @@ class Nmap
 
     private $timeout = 60;
 
+    private $enableScanPing = false;
+
+    private $enableRaw = false;
+
+    private $enableHostnameIdentification = false;
+
+    private $enableScanTcpSyn = false;
+
+    private $enableUdpScan = false;
+
+    private $enableTcpScan = false;
+
+    // 0 : paranoid, 1 : sneaky, 2 : polite, 3 : normal (default), 4 : aggressive, 5 : insane
+    private $aggressivityLevel = 3;
+
+    private $enableFastScan = false;
+
     /**
      * @return Nmap
      */
@@ -103,6 +120,38 @@ class Nmap
 
         if (true == $this->treatHostsAsOnline) {
             $options[] = '-Pn';
+        }
+
+        if (true == $this->enableScanPing) {
+            $options[] = '-sP';
+        }
+
+        if (true == $this->enableRaw) {
+            $options = array();
+        }
+
+        if (true == $this->enableHostnameIdentification) {
+            $options[] = '-sL';
+        }
+
+        if (true == $this->enableScanTcpSyn) {
+            $options[] = '-sS';
+        }
+
+        if (true == $this->enableUdpScan) {
+            $options[] = '-sU';
+        }
+
+        if (true == $this->enableTcpScan) {
+            $options[] = '-sT';
+        }
+
+        if (isset($this->aggressivityLevel)){
+            $options[] = sprintf('-T%d', $this->aggressivityLevel);
+        }
+
+        if (true == $this->enableFastScan) {
+            $options[] = '-F';
         }
 
         $options[] = '-oX';
@@ -203,6 +252,102 @@ class Nmap
     public function setTimeout($timeout)
     {
         $this->timeout = $timeout;
+
+        return $this;
+    }
+
+    /**
+     * @param $enable
+     *
+     * @return $this
+     */
+    public function enableScanPing($enable = true)
+    {
+        $this->enableScanPing = $enable;
+
+        return $this;
+    }
+
+    /**
+     * @param $enable
+     *
+     * @return $this
+     */
+    public function enableRaw($enable = true)
+    {
+        $this->enableRaw = $enable;
+
+        return $this;
+    }
+
+    /**
+     * @param $enable
+     *
+     * @return $this
+     */
+    public function enableHostnameIdentification($enable = true)
+    {
+        $this->enableHostnameIdentification = $enable;
+
+        return $this;
+    }
+
+    /**
+     * @param $enable
+     *
+     * @return $this
+     */
+    public function enableScanTcpSyn($enable = true)
+    {
+        $this->enableScanTcpSyn = $enable;
+
+        return $this;
+    }
+
+    /**
+     * @param $enable
+     *
+     * @return $this
+     */
+    public function enableUdpScan($enable = true)
+    {
+        $this->enableUdpScan = $enable;
+
+        return $this;
+    }
+
+    /**
+     * @param $enable
+     *
+     * @return $this
+     */
+    public function enableTcpScan($enable = true)
+    {
+        $this->enableTcpScan = $enable;
+
+        return $this;
+    }
+
+    /**
+     * @param $level
+     *
+     * @return $this
+     */
+    public function setAggressivityLevel($level)
+    {
+        $this->aggressivityLevel = $level;
+
+        return $this;
+    }
+
+    /**
+     * @param $enable
+     *
+     * @return $this
+     */
+    public function enableFastScan($enable = true)
+    {
+        $this->enableFastScan = $enable;
 
         return $this;
     }
